@@ -18,8 +18,8 @@ app.get('/health', (_, res) => {
 	res.status(200).json({ message: 'Server is healthy.' });
 });
 
-app.use('/getSports', sportsRoutes);
-app.use('/match-odds', matchOddsRoutes);
-app.use('/tv', tvRoutes);
+app.use('/api/games', sportsRoutes);
+app.use('/api/games/odds', matchOddsRoutes);
+app.use('/api/games/tv', tvRoutes);
 
 export default app;
