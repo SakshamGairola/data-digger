@@ -9,49 +9,9 @@ router.post("/", attachBrowserSession, async (req, res) => {
 
   try {
     await page.goto(url, { waitUntil: "load" });
-	await new Promise(resolve => setTimeout(resolve, 1500)); // Wait for 2 seconds
-    // const matchOdds = await page.evaluate(() => {
-    // 	const marketData = {};
-    // 	$('div.game-market').each(function () {
-    // 		const $m = $(this);
-    // 		const market = {};
-    // 		const title = $m.find('.market-title span').first().text().trim();
-    // 		const hdrText = $m.find('.market-header .market-nation-name').first().text().trim();
+	await page.waitForSelector('div.game-market', {visible: true});
 
-    // 		if (hdrText) {
-    // 			const minMax = {};
-    // 			hdrText.split(/\s{2,}| /).forEach((part) => {
-    // 				const [k, v] = part.split(':').map((s) => s.trim());
-    // 				if (k && v) minMax[k.toLowerCase()] = v;
-    // 			});
-    // 			market.limits = minMax;
-    // 		}
-
-    // 		market.rows = $m.find('.market-body .market-row').map(function () {
-    // 			const $r = $(this);
-    // 			const row = {
-    // 				state: $r.data('title'),
-    // 				name: $r.find('.market-nation-name').first().text().trim(),
-    // 				odds: {},
-    // 			};
-    // 			$r.find('.market-odd-box').each(function () {
-    // 				const classes = $(this).attr('class').split(/\s+/);
-    // 				const key =
-    // 					classes.find(c => /^back\d*$/.test(c) || /^lay\d*$/.test(c) || c === 'back' || c === 'lay') || 'other';
-    // 				row.odds[key] = {
-    // 					odd: $(this).find('.market-odd').text().trim() || null,
-    // 					volume: $(this).find('.market-volume').text().trim() || null,
-    // 				};
-    // 			});
-    // 			return row;
-    // 		}).get();
-
-    // 		marketData[title] = market;
-    // 	});
-    // 	return marketData;
-    // });
-
-    const matchOdds = await page.evaluate(() => {
+	const matchOdds = await page.evaluate(() => {
       const marketData = {};
 
       document.querySelectorAll("div.game-market").forEach((marketEl) => {
