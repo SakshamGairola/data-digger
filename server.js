@@ -1,21 +1,27 @@
 import dotenv from 'dotenv';
 import app from './app.js';
 import { initBrowser, closeBrowser } from './services/browserManager.js';
+import createLogger from './utils/logger.js';
 
+const logger = createLogger('server');
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
 	try {
-		await initBrowser(); // Initialize browser session
-		console.log('Browser session initialized');
+		await initBrowser();
+		logger.info('Browser session initialized', { action: 'startup' });
 
 		app.listen(PORT, () => {
-			console.log(`Server is running on http://localhost:${PORT}`);
+			logger.info(`Server running on http://localhost:${PORT}`, { action: 'startup' });
 		});
 	} catch (err) {
-		console.error('Failed to initialize browser session:', err);
+		logger.error('Startup failed', {
+			action: 'initBrowser',
+			reason: err.message,
+			stack: err.stack
+		});
 		process.exit(1);
 	}
 };
@@ -23,14 +29,10 @@ const startServer = async () => {
 startServer();
 
 // Graceful shutdown
-process.on('SIGINT', async () => {
-	console.log('\nGracefully shutting down...');
-	await closeBrowser();
-	process.exit();
-});
-
-process.on('SIGTERM', async () => {
-	console.log('\nGracefully shutting down...');
-	await closeBrowser();
-	process.exit();
+['SIGINT', 'SIGTERM'].forEach(signal => {
+	process.on(signal, async () => {
+		logger.info(`Received ${signal}. Shutting down...`);
+		await closeBrowser();
+		process.exit();
+	});
 });
