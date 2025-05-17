@@ -1,5 +1,5 @@
 import express from 'express';
-import initBrowserSession from '../middleware/initBrowserSession.js';
+import initBrowserSession from '../middleware/attachBrowserSession.js';
 
 const router = express.Router();
 
