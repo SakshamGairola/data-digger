@@ -1,9 +1,9 @@
 import express from 'express';
-import initBrowserSession from '../middleware/attachBrowserSession.js';
+import attachBrowserSession from '../middleware/attachBrowserSession.js';
 
 const router = express.Router();
 
-router.get('/', initBrowserSession, async (req, res) => {
+router.get('/', attachBrowserSession, async (req, res) => {
 	const { browser, page } = req;
 	try {
 		const sports = await page.evaluate(() => {
@@ -27,7 +27,6 @@ router.get('/', initBrowserSession, async (req, res) => {
 			});
 			return scrappedSports;
 		});
-		await browser.close();
 		res.status(200).json(sports);
 	} catch (err) {
 		console.error(err);

@@ -1,9 +1,9 @@
 import express from 'express';
-import initBrowserSession from '../middleware/attachBrowserSession.js';
+import attachBrowserSession from '../middleware/attachBrowserSession.js';
 
 const router = express.Router();
 
-router.post('/', initBrowserSession, async (req, res) => {
+router.post('/', attachBrowserSession, async (req, res) => {
 	const { browser, page } = req;
 	const { url } = req.body;
 
@@ -26,7 +26,6 @@ router.post('/', initBrowserSession, async (req, res) => {
 			return $(iframe).attr('src');
 		});
 
-		await browser.close();
 		res.status(200).json({ tvUrl });
 	} catch (err) {
 		console.error(err);
