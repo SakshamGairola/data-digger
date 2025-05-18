@@ -9,12 +9,27 @@ const router = express.Router();
 router.post('/', attachBrowserSession('tv'), async (req, res) => {
   const { url } = req.body;
 
-  try {
-    const page = await getPageForURL(url, 'tv');
+	try {
+		const page = await getPageForURL(url, 'tv');
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		const elementHandle = await page.$('div.sidebar-box:first-of-type');
+		let iframeCount = 0;
+		if (elementHandle) {
+			// Extract class names and check if it only contains "sidebar-box"
+			const classNames = await elementHandle.evaluate((el) => el.className);
+			const classList = classNames.split(/\s+/);
 
-    const iframeExists = await page.$('div.live-tv iframe');
+			const tvExists = classList.length === 1 && classList[0] === 'sidebar-box';
 
-    if (iframeExists) {
+			if (!tvExists) {
+				return res.status(410).json({ message: 'TV is not available' });
+			}
+
+			// Count child elements
+			iframeCount = await elementHandle.evaluate((el) => el.children.length);
+		}
+
+    if (iframeCount == 2) {
       await page.evaluate(() => {
         const trigger = document.querySelector('div.sidebar-box:first-of-type > div.sidebar-title') ||
                         document.querySelector('.fa-tv')?.closest('a');
