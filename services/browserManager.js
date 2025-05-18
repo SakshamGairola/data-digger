@@ -48,7 +48,7 @@ export const initBrowser = async () => {
 	}
 };
 
-const loginToSite = async (page) => {
+export const loginToSite = async (page) => {
 	const URL = process.env.URL;
 	await page.goto(URL, { waitUntil: 'networkidle0' });
 	const loginForm = await page.$('input[name="username"]');
@@ -56,7 +56,7 @@ const loginToSite = async (page) => {
 		await page.type('input[name="username"]', process.env.LOGIN_USERNAME);
 		await page.type('input[name="password"]', process.env.PASSWORD);
 		await page.click('div.d-grid button');
-		await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+		await new Promise(r => setTimeout(r, 1750));
 	}
 };
 

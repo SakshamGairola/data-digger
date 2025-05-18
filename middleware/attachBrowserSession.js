@@ -1,4 +1,4 @@
-import { getBrowser, getPageForURL } from "../services/browserManager.js";
+import { getBrowser, getPageForURL, loginToSite } from "../services/browserManager.js";
 import createLogger from "../utils/logger.js";
 import cache from "memory-cache";
 
@@ -40,6 +40,7 @@ const attachBrowserSession = (type = 'matchOdds') => {
           return res.status(500).json({ error: 'Default page not initialized yet' });
         }
         logger.info('Using default page for session', { action: 'attachBrowserSession' });
+        await loginToSite(page);
       }
 
       req.browser = browser;
