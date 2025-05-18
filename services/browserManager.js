@@ -35,7 +35,7 @@ export const initBrowser = async () => {
 
 	try {
 		await page.goto(loginUrl, {
-			waitUntil: 'domcontentloaded',
+			waitUntil: 'networkidle0',
 			timeout: 20000,
 		});
 		await loginToSite(page);
@@ -50,7 +50,7 @@ export const initBrowser = async () => {
 
 const loginToSite = async (page) => {
 	const URL = process.env.URL;
-	await page.goto(URL, { waitUntil: 'domcontentloaded' });
+	await page.goto(URL, { waitUntil: 'networkidle0' });
 	const loginForm = await page.$('input[name="username"]');
 	if (loginForm) {
 		await page.type('input[name="username"]', process.env.LOGIN_USERNAME);
