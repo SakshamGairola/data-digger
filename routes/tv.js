@@ -35,20 +35,14 @@ router.post('/', attachBrowserSession('tv'), async (req, res) => {
                         document.querySelector('.fa-tv')?.closest('a');
         trigger?.click();
       });
-      await new Promise(r => setTimeout(r, 500));
-      await page.evaluate(() => {
-        const trigger = document.querySelector('div.sidebar-box:first-of-type > div.sidebar-title') ||
-                        document.querySelector('.fa-tv')?.closest('a');
-        trigger?.click();
-      });
-    } else {
-      await page.evaluate(() => {
-        const trigger = document.querySelector('div.sidebar-box:first-of-type > div.sidebar-title') ||
-                        document.querySelector('.fa-tv')?.closest('a');
-        trigger?.click();
-      });
     }
-
+    await new Promise(r => setTimeout(r, 1000));
+    await page.evaluate(() => {
+      const trigger = document.querySelector('div.sidebar-box:first-of-type > div.sidebar-title') ||
+                      document.querySelector('.fa-tv')?.closest('a');
+      trigger?.click();
+    });
+    await new Promise(r => setTimeout(r, 1000));
     await page.waitForSelector('div.live-tv iframe', { visible: true, timeout: 10000 });
     const tvUrl = await page.evaluate(() => document.querySelector('div.live-tv iframe')?.src || null);
 
